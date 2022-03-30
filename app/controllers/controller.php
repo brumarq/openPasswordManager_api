@@ -61,4 +61,18 @@ class Controller
         }
         return $object;
     }
+
+    function decodeJWToken($token)
+    {
+        $key = "thismustbesecret";
+
+        return JWT::decode($token, $key, 'HS256');
+    }
+
+    function generateJWToken($payload)
+    {
+        $serverKey = 'thismustbesecret';
+
+        return JWT::encode($payload, $serverKey, 'HS256');
+    }
 }

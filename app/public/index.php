@@ -28,6 +28,8 @@ $router->put('/categories/(\d+)', 'CategoryController@update');
 $router->delete('/categories/(\d+)', 'CategoryController@delete');
 
 $router->post('/users/login', 'UserController@login');
+$router->post('/users/signup', 'UserController@signup');
+
 
 // Run it!
 $router->run();
