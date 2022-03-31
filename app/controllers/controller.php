@@ -16,9 +16,9 @@ class Controller
 
         try {
             $header = $_SERVER["HTTP_AUTHORIZATION"];
+
             $array = explode(" ", $header);
             $jwt = $array[1];
-
             $key = "thismustbesecret";
 
             $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
@@ -60,13 +60,6 @@ class Controller
             $object->{$key} = $value;
         }
         return $object;
-    }
-
-    function decodeJWToken($token)
-    {
-        $key = "thismustbesecret";
-
-        return JWT::decode($token, $key, 'HS256');
     }
 
     function generateJWToken($payload)

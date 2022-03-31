@@ -25,15 +25,19 @@ class UserController extends Controller
                 return;
             }
 
-            $key = "thismustbesecret";
-
             $payload = array(
-                "id" => $user->userId,
-                "firstName" => $user->firstName
+                "iss" => "http://localhost",
+                "aud" => "http://localhost",
+                "iat" => time(),
+                "nbf" => time(),
+                "exp" => time() + 600,
+                "data" => array(
+                    "id" => $user->userId,
+                    "firstName" => $user->firstName
+                )
             );
 
             $jwt = $this -> generateJWToken($payload);
-            
 
             $this->respond(["userId" => $user-> userId,
                 "firstName" => $user-> firstName,
@@ -59,8 +63,15 @@ class UserController extends Controller
             }
 
             $payload = array(
-                "id" => $user->id,
-                "firstName" => $user->firstName
+                "iss" => "http://localhost",
+                "aud" => "http://localhost",
+                "iat" => time(),
+                "nbf" => time(),
+                "exp" => time() + 600,
+                "data" => array(
+                    "id" => $user->id,
+                    "firstName" => $user->firstName
+                )
             );
 
             $jwt = $this -> generateJWToken($payload);

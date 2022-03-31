@@ -21,5 +21,4 @@ class UserService {
     {
         return $this->repository->createNewUser($user);
     }
-
 }
