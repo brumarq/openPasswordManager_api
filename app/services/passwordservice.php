@@ -16,8 +16,8 @@ class PasswordService {
         return $this->repository->getAllFromUser($user);
     }
 
-    public function getOne($id) {
-        return $this->repository->getOne($id);
+    public function getOne($id, $userId) {
+        return $this->repository->getOne($id, $userId);
     }
 
     public function insert($item) {
@@ -28,8 +28,8 @@ class PasswordService {
         return $this->repository->update($password, $passwordId);
     }
 
-    public function delete($item) {
-        return $this->repository->delete($item);
+    public function delete($passwordId, $userId) {
+        return $this->repository->delete($passwordId, $userId);
     }
 }
 

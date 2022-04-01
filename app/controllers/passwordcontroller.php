@@ -23,22 +23,25 @@ class PasswordController extends Controller
             return;
 
         $userId = $jwt->data->id;
-        $products = $this->service->getAllFromUser($userId);;
+        $passwords = $this->service->getAllFromUser($userId);;
 
-        $this->respond($products);
+        $this->respond($passwords);
     }
 
     public function getOne($id)
     {
-        $product = $this->service->getOne($id);
+        $jwt = $this->checkToken();
+        if (!$jwt)
+            return;
 
-        // we might need some kind of error checking that returns a 404 if the product is not found in the DB
-        if (!$product) {
-            $this->respondWithError(404, "Product not found");
+        $password = $this->service->getOne($id, $jwt->data->id);
+
+        if (!$password) {
+            $this->respondWithError(404, "Password not found");
             return;
         }
 
-        $this->respond($product);
+        $this->respond($password);
     }
 
     public function create()
@@ -56,7 +59,6 @@ class PasswordController extends Controller
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
-
     }
 
     public function update($passwordId)
@@ -69,18 +71,27 @@ class PasswordController extends Controller
             $password = $this->createObjectFromPostedJson("Models\\Password");
             $password -> fkUserId = $jwt->data->id;
 
-            $product = $this->service->update($password, $passwordId);
+            $password = $this->service->update($password, $passwordId);
+
+            if (!$password) {
+                $this->respondWithError(404, "Password not found");
+                return;
+            }
+
+            $this->respond($password);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
-
-        $this->respond($product);
     }
 
     public function delete($id)
     {
         try {
-            $this->service->delete($id);
+            $jwt = $this->checkToken();
+            if (!$jwt)
+                return;
+
+            $this->service->delete($id, $jwt->data->id);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }

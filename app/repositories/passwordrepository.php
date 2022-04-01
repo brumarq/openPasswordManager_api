@@ -9,20 +9,7 @@ use Repositories\Repository;
 
 class PasswordRepository extends Repository
 {
-    private $userEncryptedPassword = "";
-
-    function getEncryptedPasswordFromUser($userId){
-        // Retrieve encrypted password from user
-        $stmt = $this->connection->prepare("SELECT password 
-                                                       FROM user
-                                                       WHERE userId = :userId");
-        $stmt->bindParam(':userId', $userId);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\User');
-        $user = $stmt->fetch();
-
-        return $user->password;
-    }
+    private string $userEncryptedPassword = "";
 
     function getAllFromUser($userId)
     {
@@ -44,18 +31,21 @@ class PasswordRepository extends Repository
         }
     }
 
-    function getOne($password)
+    function getOne($passwordId, $userId)
     {
         try {
-            $this->userEncryptedPassword = $this->getEncryptedPasswordFromUser($password->fkUserId);
+            $this->userEncryptedPassword = $this->getEncryptedPasswordFromUser($userId);
 
-            $stmt = $this->connection->prepare("SELECT * FROM password WHERE fkUserId = :userId AND passwordId = :passwordId");
-            $stmt->execute(['userId' => $password->fkUserId, 'passwordId' => $password->passwordId]);
+            $stmt = $this->connection->prepare("SELECT * FROM password WHERE fkUserId = ? AND passwordId = ?");
+            $stmt->execute([$userId, $passwordId]);
 
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $row = $stmt->fetch();
-
-            return $this->rowToPassword($row);
+            if (!empty($row)){
+                return $this->rowToPassword($row);
+            }else{
+                return;
+            }
 
         } catch (PDOException $e) {
             echo $e;
@@ -107,22 +97,35 @@ class PasswordRepository extends Repository
 
             $password->passwordId = $passwordId;
 
-            return $this->getOne($password);
+            return $this->getOne($password->passwordId, $password->fkUserId);
         } catch (PDOException $e) {
             echo $e;
         }
     }
 
-    function delete($id)
+    function delete($id, $userId)
     {
         try {
-            $stmt = $this->connection->prepare("DELETE FROM product WHERE id = :id");
-            $stmt->bindParam(':id', $id);
+            $stmt = $this->connection->prepare("DELETE FROM password WHERE passwordId = ? AND fkUserId = ?");
+            $stmt->execute([$id, $userId]);
             $stmt->execute();
             return;
         } catch (PDOException $e) {
             echo $e;
         }
         return true;
+    }
+
+    function getEncryptedPasswordFromUser($userId){
+        // Retrieve encrypted password from user
+        $stmt = $this->connection->prepare("SELECT password 
+                                                       FROM user
+                                                       WHERE userId = :userId");
+        $stmt->bindParam(':userId', $userId);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Models\User');
+        $user = $stmt->fetch();
+
+        return $user->password;
     }
 }

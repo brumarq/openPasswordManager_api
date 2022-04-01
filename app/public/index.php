@@ -15,17 +15,10 @@ $router->setNamespace('Controllers');
 
 // routes for the products endpoint
 $router->get('/passwords', 'PasswordController@getAll');
-$router->get('/products/(\d+)', 'ProductController@getOne');
+$router->get('/password/(\d+)', 'PasswordController@getOne');
 $router->post('/password', 'PasswordController@create');
 $router->put('/password/(\d+)', 'PasswordController@update');
-$router->delete('/products/(\d+)', 'ProductController@delete');
-
-// routes for the categories endpoint
-$router->get('/categories', 'CategoryController@getAll');
-$router->get('/categories/(\d+)', 'CategoryController@getOne');
-$router->post('/categories', 'CategoryController@create');
-$router->put('/categories/(\d+)', 'CategoryController@update');
-$router->delete('/categories/(\d+)', 'CategoryController@delete');
+$router->delete('/password/(\d+)', 'PasswordController@delete');
 
 $router->post('/users/login', 'UserController@login');
 $router->post('/users/signup', 'UserController@signup');
