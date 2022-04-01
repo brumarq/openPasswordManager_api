@@ -15,12 +15,13 @@ class UserController extends Controller
         $this->service = new UserService();
     }
 
-    public function login() {
+    public function login()
+    {
         try {
             $postedUser = $this->createObjectFromPostedJson("Models\\User");
             $user = $this->service->checkEmailPassword($postedUser->email, $postedUser->password);
 
-            if(!$user) {
+            if (!$user) {
                 $this->respondWithError(401, "Invalid credentials");
                 return;
             }
@@ -37,12 +38,12 @@ class UserController extends Controller
                 )
             );
 
-            $jwt = $this -> generateJWToken($payload);
+            $jwt = $this->generateJWToken($payload);
 
-            $this->respond(["userId" => $user-> userId,
-                "firstName" => $user-> firstName,
-                "lastName" => $user-> lastName,
-                "email" => $user-> email,
+            $this->respond(["userId" => $user->userId,
+                "firstName" => $user->firstName,
+                "lastName" => $user->lastName,
+                "email" => $user->email,
                 "token" => $jwt
             ]);
 
@@ -51,13 +52,14 @@ class UserController extends Controller
         }
     }
 
-    public function signup() {
+    public function signup()
+    {
         try {
             $postedUser = $this->createObjectFromPostedJson("Models\\User");
             $postedUser->password = password_hash($postedUser->password, PASSWORD_DEFAULT);
             $user = $this->service->createNewUser($postedUser);
 
-            if(!$user) {
+            if (!$user) {
                 $this->respondWithError(401, "Email already exists!");
                 return;
             }
@@ -74,13 +76,13 @@ class UserController extends Controller
                 )
             );
 
-            $jwt = $this -> generateJWToken($payload);
+            $jwt = $this->generateJWToken($payload);
 
             $this->respond([
-                "userId" => $user-> id,
-                "firstName" => $user-> firstName,
-                "lastName" => $user-> lastName,
-                "email" => $user-> email,
+                "userId" => $user->id,
+                "firstName" => $user->firstName,
+                "lastName" => $user->lastName,
+                "email" => $user->email,
                 "token" => $jwt
             ]);
 

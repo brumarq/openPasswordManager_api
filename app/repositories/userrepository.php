@@ -4,7 +4,6 @@ namespace Repositories;
 
 use PDO;
 use PDOException;
-use Repositories\Repository;
 
 class UserRepository extends Repository
 {
@@ -39,6 +38,13 @@ class UserRepository extends Repository
         }
     }
 
+    function verifyPassword($input, $hash)
+    {
+        return password_verify($input, $hash);
+    }
+
+    // verify the password hash
+
     function createNewUser($user)
     {
         try {
@@ -57,10 +63,10 @@ class UserRepository extends Repository
                                                        VALUES (:firstName, :lastName, :email, :password)");
 
             $stmt->execute([
-                'firstName' => $user -> firstName,
-                'lastName' => $user -> lastName,
-                'email' => $user -> email,
-                'password' => $user -> password
+                'firstName' => $user->firstName,
+                'lastName' => $user->lastName,
+                'email' => $user->email,
+                'password' => $user->password
             ]);
 
             $user->id = $this->connection->lastInsertId();
@@ -70,11 +76,5 @@ class UserRepository extends Repository
         } catch (PDOException $e) {
             echo $e;
         }
-    }
-
-    // verify the password hash
-    function verifyPassword($input, $hash)
-    {
-        return password_verify($input, $hash);
     }
 }

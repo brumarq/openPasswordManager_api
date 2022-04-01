@@ -4,7 +4,6 @@ namespace Controllers;
 
 use Exception;
 use Services\PasswordService;
-use Services\UserService;
 
 class PasswordController extends Controller
 {
@@ -23,7 +22,7 @@ class PasswordController extends Controller
             return;
 
         $userId = $jwt->data->id;
-        $passwords = $this->service->getAllFromUser($userId);;
+        $passwords = $this->service->getAllFromUser($userId);
 
         $this->respond($passwords);
     }
@@ -52,7 +51,7 @@ class PasswordController extends Controller
                 return;
 
             $password = $this->createObjectFromPostedJson("Models\\Password");
-            $password -> fkUserId = $jwt->data->id;
+            $password->fkUserId = $jwt->data->id;
 
             $password = $this->service->insert($password);
             $this->respond($password);
@@ -69,7 +68,7 @@ class PasswordController extends Controller
                 return;
 
             $password = $this->createObjectFromPostedJson("Models\\Password");
-            $password -> fkUserId = $jwt->data->id;
+            $password->fkUserId = $jwt->data->id;
 
             $password = $this->service->update($password, $passwordId);
 
