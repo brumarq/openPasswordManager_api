@@ -44,25 +44,25 @@ class PasswordRepository extends Repository
         }
     }
 
-    function getOne($id)
+    function getOne($password)
     {
         try {
-            $query = "SELECT product.*, category.name as category_name FROM product INNER JOIN category ON product.category_id = category.id WHERE product.id = :id";
-            $stmt = $this->connection->prepare($query);
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
+            $this->userEncryptedPassword = $this->getEncryptedPasswordFromUser($password->fkUserId);
+
+            $stmt = $this->connection->prepare("SELECT * FROM password WHERE fkUserId = :userId AND passwordId = :passwordId");
+            $stmt->execute(['userId' => $password->fkUserId, 'passwordId' => $password->passwordId]);
 
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $row = $stmt->fetch();
-            $product = $this->rowToProduct($row);
 
-            return $product;
+            return $this->rowToPassword($row);
+
         } catch (PDOException $e) {
             echo $e;
         }
     }
 
-    function rowToPassword($row) {
+    function rowToPassword($row): Password {
         $password = new Password();
         $password->passwordId = $row['passwordId'];
         $password->websiteUrl = $row['websiteUrl'];
@@ -81,7 +81,7 @@ class PasswordRepository extends Repository
             $this->userEncryptedPassword = $this->getEncryptedPasswordFromUser($password->fkUserId);
 
             // Encrypt password with master key of user
-            $encryptedPassword=openssl_encrypt($password->password,"AES-128-ECB",$this->userEncryptedPassword);
+            $encryptedPassword = openssl_encrypt($password->password,"AES-128-ECB",$this->userEncryptedPassword);
 
             // Insert new password into table
             $stmt = $this->connection->prepare("INSERT INTO password (websiteUrl, email, password, fkUserId) VALUES (?,?,?,?)");
@@ -95,14 +95,19 @@ class PasswordRepository extends Repository
     }
 
 
-    function update($product, $id)
+    function update($password, $passwordId)
     {
         try {
-            $stmt = $this->connection->prepare("UPDATE product SET name = ?, price = ?, description = ?, image = ?, category_id = ? WHERE id = ?");
+            $this->userEncryptedPassword = $this->getEncryptedPasswordFromUser($password->fkUserId);
 
-            $stmt->execute([$product->name, $product->price, $product->description, $product->image, $product->category_id, $id]);
+            $encryptedPassword = openssl_encrypt($password->password,"AES-128-ECB",$this->userEncryptedPassword);
 
-            return $this->getOne($product->id);
+            $stmt = $this->connection->prepare("UPDATE password SET websiteUrl = ?, email = ?, password = ? WHERE passwordId = ? AND fkUserId=?");
+            $stmt->execute([$password->websiteUrl, $password->email, $encryptedPassword, $passwordId, $password->fkUserId]);
+
+            $password->passwordId = $passwordId;
+
+            return $this->getOne($password);
         } catch (PDOException $e) {
             echo $e;
         }

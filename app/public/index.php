@@ -17,7 +17,7 @@ $router->setNamespace('Controllers');
 $router->get('/passwords', 'PasswordController@getAll');
 $router->get('/products/(\d+)', 'ProductController@getOne');
 $router->post('/password', 'PasswordController@create');
-$router->put('/products/(\d+)', 'ProductController@update');
+$router->put('/password/(\d+)', 'PasswordController@update');
 $router->delete('/products/(\d+)', 'ProductController@delete');
 
 // routes for the categories endpoint

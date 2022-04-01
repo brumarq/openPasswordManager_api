@@ -24,8 +24,8 @@ class PasswordService {
         return $this->repository->insert($item);
     }
 
-    public function update($item, $id) {
-        return $this->repository->update($item, $id);
+    public function update($password, $passwordId) {
+        return $this->repository->update($password, $passwordId);
     }
 
     public function delete($item) {

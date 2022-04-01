@@ -59,11 +59,17 @@ class PasswordController extends Controller
 
     }
 
-    public function update($id)
+    public function update($passwordId)
     {
         try {
-            $product = $this->createObjectFromPostedJson("Models\\Product");
-            $product = $this->service->update($product, $id);
+            $jwt = $this->checkToken();
+            if (!$jwt)
+                return;
+
+            $password = $this->createObjectFromPostedJson("Models\\Password");
+            $password -> fkUserId = $jwt->data->id;
+
+            $product = $this->service->update($password, $passwordId);
         } catch (Exception $e) {
             $this->respondWithError(500, $e->getMessage());
         }
