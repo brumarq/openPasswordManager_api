@@ -27,12 +27,16 @@ SET time_zone = "+00:00";
 -- Table structure for table `password`
 --
 
+CREATE DATABASE IF NOT EXISTS `opm`;
+
+use opm;
+
 CREATE TABLE `password` (
-  `passwordId` int(11) NOT NULL,
-  `websiteUrl` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `fkUserId` int(11) NOT NULL
+                            `passwordId` int(11) NOT NULL,
+                            `websiteUrl` varchar(255) NOT NULL,
+                            `email` varchar(255) NOT NULL,
+                            `password` varchar(255) NOT NULL,
+                            `fkUserId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -40,9 +44,9 @@ CREATE TABLE `password` (
 --
 
 INSERT INTO `password` (`passwordId`, `websiteUrl`, `email`, `password`, `fkUserId`) VALUES
-(28, 'https://www.google.com', 'test@gmail.com', 'yJU++rY1TbayCDsusNauBw==', 11),
-(29, 'https://www.yahoo.com', 'test123@gmail.com', 'yJU++rY1TbayCDsusNauBw==', 11),
-(30, 'https://www.facebook.com', 'test@gmail.com', 'OMyEIjZG3ihS5572/El3MA==', 11);
+                                                                                         (28, 'https://www.google.com', 'test@gmail.com', 'yJU++rY1TbayCDsusNauBw==', 11),
+                                                                                         (29, 'https://www.yahoo.com', 'test123@gmail.com', 'yJU++rY1TbayCDsusNauBw==', 11),
+                                                                                         (30, 'https://www.facebook.com', 'test@gmail.com', 'OMyEIjZG3ihS5572/El3MA==', 11);
 
 -- --------------------------------------------------------
 
@@ -51,11 +55,11 @@ INSERT INTO `password` (`passwordId`, `websiteUrl`, `email`, `password`, `fkUser
 --
 
 CREATE TABLE `user` (
-  `userId` int(11) NOT NULL,
-  `firstName` varchar(255) NOT NULL,
-  `lastName` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+                        `userId` int(11) NOT NULL,
+                        `firstName` varchar(255) NOT NULL,
+                        `lastName` varchar(255) NOT NULL,
+                        `email` varchar(255) NOT NULL,
+                        `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -63,7 +67,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userId`, `firstName`, `lastName`, `email`, `password`) VALUES
-(11, 'testName', 'testLastName', 'test@gmail.com', '$2y$10$AtxKKKFgS8tP/vzCwBkLDuD3kR80wd5zGblv30JFIxD5apSuprtQy');
+    (11, 'testName', 'testLastName', 'test@gmail.com', '$2y$10$AtxKKKFgS8tP/vzCwBkLDuD3kR80wd5zGblv30JFIxD5apSuprtQy');
 
 --
 -- Indexes for dumped tables
@@ -73,14 +77,14 @@ INSERT INTO `user` (`userId`, `firstName`, `lastName`, `email`, `password`) VALU
 -- Indexes for table `password`
 --
 ALTER TABLE `password`
-  ADD PRIMARY KEY (`passwordId`),
+    ADD PRIMARY KEY (`passwordId`),
   ADD KEY `fkUserId` (`fkUserId`);
 
 --
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`userId`);
+    ADD PRIMARY KEY (`userId`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -90,13 +94,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `password`
 --
 ALTER TABLE `password`
-  MODIFY `passwordId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+    MODIFY `passwordId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+    MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Constraints for dumped tables
@@ -106,7 +110,7 @@ ALTER TABLE `user`
 -- Constraints for table `password`
 --
 ALTER TABLE `password`
-  ADD CONSTRAINT `password_ibfk_1` FOREIGN KEY (`fkUserId`) REFERENCES `user` (`userId`);
+    ADD CONSTRAINT `password_ibfk_1` FOREIGN KEY (`fkUserId`) REFERENCES `user` (`userId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
